@@ -1,5 +1,6 @@
+import networkx as nx
 import numpy as np
-
+import pprint
 SOURCE = "s"
 
 
@@ -7,8 +8,8 @@ class ADO(object):
     """
 
     """
-    k = 0
-    n = 0
+    k = 5
+    n = 5
 
     def compute_distance(self, u, v):
         """
@@ -49,25 +50,61 @@ class ADO(object):
         Lambda = self.generate_empty_k_over_n_array()
         P = self.generate_empty_k_over_n_array()
         for i in range(self.k - 1, -1, -1):
-            G.add_weighted_edges_from([(i, SOURCE, 0) for i in A[i]])
-            self.run_dijkstra_from_s_to_G_and_update_Lambda_and_P(G, Lambda, P, i)
-            
-            G.remove_node(SOURCE)
+            G.add_weighted_edges_from([(j, SOURCE, 0) for j in A[i]])
+            self.run_dijkstra_from_s_to_G_and_update_Lambda_and_P(G, Lambda, P, A, i)
 
-    def run_dijkstra_from_s_to_G_and_update_Lambda_and_P(self, G, Lambda, P, i):
-        # TODO
-        pass
+            G.remove_node(SOURCE)
+        return Lambda, P
+
+    def run_dijkstra_from_s_to_G_and_update_Lambda_and_P(self, G, Lambda, P, A, i):
+        path_lengths, paths = nx.single_source_dijkstra(G, SOURCE)
+        self.update_Lambda(G, Lambda, i, path_lengths)
+        self.update_P(A, G, P, i, paths)
+
+    @staticmethod
+    def update_P(A, G, P, i, paths):
+        """
+        inserts for all v in V the the node u closest to v so that u in A[i]
+        :param A: the A array
+        :param G: The graph
+        :param P: the Lambda array
+        :param i: current index of A currently iterated
+        :param paths: paths from source node to all nodes
+        """
+        for v in set(G.nodes) - {SOURCE}:
+            for predecessor in range(len(paths[v]) - 1, -1, -1):
+                if paths[v][predecessor] in A[i]:
+                    P[i][v] = paths[v][predecessor]
+                    break
+
+    @staticmethod
+    def update_Lambda(G, Lambda, i, path_lengths):
+        """
+        inserts for all v in V the weighted distance from the closest u in A[i] to v
+        :param G: The graph
+        :param Lambda: the Lambda array
+        :param i: current index of A currently iterated
+        :param path_lengths: lengths of paths from source node to all nodes
+        """
+        for v in set(G.nodes) - {SOURCE}:
+            Lambda[i][v] = path_lengths[v]
 
     def generate_empty_k_over_n_array(self):
+        """
+        generate a k * n matrix with infinity as initial value on each entry
+        """
         array = []
         for j in xrange(self.k + 1):
             array.append([float('inf') for i in xrange(self.n)])
-            return array
+        return array
 
     def parse_graph(self, *argv, **kwargs):
         """
         parses the user arguments.
         :returns: k, and G
+        Assumptions about the input:
+        1) nodes hashes are integers
+        2) weights are stored under 'weight' key in every edge.
         """
         pass
 
