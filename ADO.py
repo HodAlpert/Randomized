@@ -1,6 +1,5 @@
 import networkx as nx
 import numpy as np
-import pprint
 SOURCE = "s"
 
 
@@ -9,7 +8,7 @@ class ADO(object):
 
     """
     k = 5
-    n = 5
+    n = 6
 
     def compute_distance(self, u, v):
         """
@@ -34,11 +33,30 @@ class ADO(object):
             A = self.generate_A(G)
         # generating a list the size of (k * n) which will contain lambda(A[i], v) for any v in V initialized as -1
         # symbolising infinity
-        distance_between_ais_and_nodes = [[-1 for i in range(len(G.nodes))] for i in range(self.k + 1)]
+        Lambda, P = self.generate_Lambda_and_P(G, A)
+        B = self.generate_B(A, G, Lambda)
+        print("lambda: %s" % Lambda)
+        print ("P: %s" % P)
+        print ("A: %s" % A)
+        print ("B: %s" % B)
+        return Lambda, P, B
+
+    def generate_B(self, A, G, Lambda):
+        # TODO think how to add the two level hash table
+        C = {}
+        for i in range(self.k - 1, -1, -1):
+            for w in A[i] - A[i + 1]:
+                path_lengths, _ = nx.single_source_dijkstra(G, w)
+                shortest_path_tree = G.subgraph(v for v in G if path_lengths[v] < Lambda[i + 1][v])
+                C[w] = set(shortest_path_tree)
+        B = {}
+        for v in G:
+            B[v] = {w for w in G if v in C[w]}
+        return B
 
     def generate_A(self, G):
         A = [set() for i in range(self.k + 1)]  # initializing with k + 1 empty sets
-        A[0] = set(G.nodes.keys())  # A[0] = V
+        A[0] = set(G)  # A[0] = V
         p = 1 / (self.n ** (1 / float(self.k)))  # assigning p with n^(-1/k)
         for i in xrange(1, self.k):
             for node in A[i - 1]:
@@ -57,6 +75,7 @@ class ADO(object):
         return Lambda, P
 
     def run_dijkstra_from_s_to_G_and_update_Lambda_and_P(self, G, Lambda, P, A, i):
+        # TODO check if it's ok to use dijkstra and not the algorithm proposed in the article
         path_lengths, paths = nx.single_source_dijkstra(G, SOURCE)
         self.update_Lambda(G, Lambda, i, path_lengths)
         self.update_P(A, G, P, i, paths)
@@ -71,7 +90,7 @@ class ADO(object):
         :param i: current index of A currently iterated
         :param paths: paths from source node to all nodes
         """
-        for v in set(G.nodes) - {SOURCE}:
+        for v in set(G) - {SOURCE}:
             for predecessor in range(len(paths[v]) - 1, -1, -1):
                 if paths[v][predecessor] in A[i]:
                     P[i][v] = paths[v][predecessor]
@@ -86,7 +105,7 @@ class ADO(object):
         :param i: current index of A currently iterated
         :param path_lengths: lengths of paths from source node to all nodes
         """
-        for v in set(G.nodes) - {SOURCE}:
+        for v in set(G) - {SOURCE}:
             Lambda[i][v] = path_lengths[v]
 
     def generate_empty_k_over_n_array(self):

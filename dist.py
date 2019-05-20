@@ -1,10 +1,15 @@
+import random
+
 import networkx as nx
+
+from ADO import ADO
+import draw_graph
 
 P = [[]]
 Lambda = [[]]
 B = []
 k = 3
-G = nx.complete_graph(100, nx.Graph())
+G = nx.complete_graph(5, nx.Graph())
 
 
 def compute_distance(u, v):
@@ -20,4 +25,11 @@ def compute_distance(u, v):
 
 
 if __name__ == '__main__':
-    compute_distance(1, 1)
+    G = nx.complete_graph(6, nx.Graph())
+    for v in G.nodes:
+        for u in G.nodes:
+            if (u, v) in G.edges:
+                G[u][v]['weight'] = 0 if u == v else int(random.random() * 40)
+
+    draw_graph.draw(G)
+    ADO().pre_processing(G)
