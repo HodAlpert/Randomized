@@ -7,14 +7,13 @@ SOURCE = "s"
 
 
 class ADO(object):
-    """
-
-    """
-
     def __init__(self, G, k):
         self.G = G
         self.n = len(G)
         self.k = k
+        self.B = None
+        self.Lambda = None
+        self.P = None
 
     def compute_distance(self, u, v):
         """
@@ -45,13 +44,10 @@ class ADO(object):
         # symbolising infinity
         Lambda, P = self.generate_Lambda_and_P(A)
         B = self.generate_B(A, Lambda)
-        print("lambda: %s" % Lambda)
-        print ("P: %s" % P)
-        print ("A: %s" % A)
-        print ("B: %s" % B)
         self.B = B
         self.Lambda = Lambda
         self.P = P
+        print("lambda: %s\nP: %s\nA: %s\nB: %s" % (Lambda, P, A, B))
         return Lambda, P, B
 
     @timeit
@@ -78,7 +74,7 @@ class ADO(object):
         A = [set() for i in range(self.k + 1)]  # initializing with k + 1 empty sets
         A[0] = set(self.G)  # A[0] = V
         p = 1 / (self.n ** (1 / float(self.k)))  # assigning p with n^(-1/k)
-        for i in xrange(1, self.k):
+        for i in range(1, self.k):
             for node in A[i - 1]:
                 if np.random.binomial(1, p, 1)[0]:
                     A[i].add(node)
@@ -130,8 +126,8 @@ class ADO(object):
         generate a k * n matrix with infinity as initial value on each entry
         """
         array = []
-        for j in xrange(self.k + 1):
-            array.append([float('inf') for i in xrange(self.n)])
+        for j in range(self.k + 1):
+            array.append([float('inf') for i in range(self.n)])
         return array
 
     def parse_graph(self, *argv, **kwargs):

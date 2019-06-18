@@ -1,9 +1,8 @@
 import random
-import draw_graph
+
 import networkx as nx
+
 from ADO import ADO
-
-
 
 P = [[]]
 Lambda = [[]]
@@ -38,10 +37,10 @@ if __name__ == '__main__':
     path_lengths, paths = nx.single_source_dijkstra(G, 1)
     path_lengths.pop(1)
     algorithm_distances = {v: t.compute_distance(1, v) for v in set(G) - {1}}
-    print "dijkstra length: ", path_lengths
-    print "algorithm length: ", algorithm_distances
+    print("dijkstra length: ", path_lengths)
+    print("algorithm length: ", algorithm_distances)
     average = 0.0
     for i in set(G) - {1}:
         average += float(abs(path_lengths[i] - algorithm_distances[i]))
     average /= len(G) - 1
-    print "average stretch is ", average
+    print("average stretch is ", average)

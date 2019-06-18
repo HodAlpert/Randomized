@@ -2,7 +2,7 @@ import time
 
 
 def modified_dijkstra(G, source, i, Lambda):
-    assert source in G.nodes, 'Such source node doesn\'t exist'
+    assert source in G.nodes, "Such source node doesn't exist"
 
     # 1. Mark all nodes unvisited and store them.
     # 2. Set the distance to zero for our initial node
@@ -52,7 +52,7 @@ def timeit(method):
             name = kw.get('log_name', method.__name__.upper())
             kw['log_time'][name] = int((te - ts) * 1000)
         else:
-            print '%r  %2.2f ms' % \
-                  (method.__name__, (te - ts) * 1000)
+            print('%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
         return result
+
     return timed
