@@ -23,24 +23,46 @@ def compute_distance(u, v):
 
 
 if __name__ == '__main__':
-    number_of_nodes = 200
-    k = 4
-    G = nx.complete_graph(number_of_nodes, nx.Graph())
-    for v in G.nodes:
-        for u in G.nodes:
-            if (u, v) in G.edges:
-                G[u][v]['weight'] = 0 if u == v else int(random.random() * 40)
+    # Loading weighted graph with integer nodes
+    G = nx.read_weighted_edgelist('graphs/les_miserables.edgelist', nodetype=int)
+    # Extract max connected component if G isn't connected
+    if not nx.is_connected(G):
+        G = G.subgraph(max(nx.connected_components(G), key=len)).copy()
+    # Some graphs node labels start at 1, reducing to 0
+    if 0 not in G.nodes:
+        G = nx.relabel_nodes(G, lambda x: x - 1)
+
+    # Verifying all self loop edges weights are 0
+    for u in nx.nodes_with_selfloops(G):
+        G[u][u]['weight'] = 0
 
     # draw_graph.draw(G)  # how to draw the graph with it's weights
     t = ADO(G, k)
     t.pre_processing()
-    path_lengths, paths = nx.single_source_dijkstra(G, 1)
-    path_lengths.pop(1)
-    algorithm_distances = {v: t.compute_distance(1, v) for v in set(G) - {1}}
-    print("dijkstra length: ", path_lengths)
-    print("algorithm length: ", algorithm_distances)
-    average = 0.0
-    for i in set(G) - {1}:
-        average += float(abs(path_lengths[i] - algorithm_distances[i]))
-    average /= len(G) - 1
-    print("average stretch is ", average)
+
+    # Computing average stretch out of 100 iterations
+    total_average = 0.0
+    max_average = 0.0
+    min_average = float('inf')
+    iterations = 10
+
+    for _ in range(iterations):
+        for node in G.nodes:
+            path_lengths, paths = nx.single_source_dijkstra(G, node)
+            path_lengths.pop(node)
+            algorithm_distances = {v: t.compute_distance(1, v) for v in set(G) - {node}}
+            # print("Dijkstra length: ", path_lengths)
+            # print("Algorithm length: ", algorithm_distances)
+
+            node_average = 0.0
+            for i in set(G) - {node}:
+                node_average += float(abs(path_lengths[i] - algorithm_distances[i]))
+            node_average /= len(G) - 1
+            # print("Node %d average stretch: %f" % (node, node_average))
+            min_average = min(min_average, node_average)
+            max_average = max(max_average, node_average)
+            total_average += node_average
+    total_average /= len(G) * iterations
+    print(f'Total average stretch: {total_average}',
+          f'Max stretch value: {max_average}',
+          f'Min stretch value: {min_average}', sep='\n')

@@ -47,7 +47,7 @@ class ADO(object):
         self.B = B
         self.Lambda = Lambda
         self.P = P
-        print("lambda: %s\nP: %s\nA: %s\nB: %s" % (Lambda, P, A, B))
+        print(f'lambda: {Lambda}\nP: {P}\nA: {A}\nB: {B}')
         return Lambda, P, B
 
     @timeit
