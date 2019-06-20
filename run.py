@@ -1,24 +1,22 @@
 import networkx as nx
+from matplotlib import pyplot as plt
 
-from ADO import ADO
+from algorithm import ApproximateDistanceOracles
 from common import timeit
 
-P = [[]]
-Lambda = [[]]
-B = []
-k = 3
 
+def draw(G):
+    pos = nx.spring_layout(G)  # positions for all nodes
+    # nodes
+    nx.draw_networkx_nodes(G, pos, node_size=300)
+    # edges
+    nx.draw_networkx_edges(G, pos, edgelist=G.edges(data=True), width=6)
+    # weights
+    nx.draw_networkx_edge_labels(G, pos, edge_labels={k: v["weight"] for k, v in G.edges.items()})
+    nx.draw_networkx_labels(G, pos, font_family='sans-serif')
 
-def compute_distance(u, v):
-    w = u
-    i = 0
-    while w not in B[v]:
-        i += 1
-        temp = u
-        u = temp
-        v = u
-        w = P[i][u]
-    return Lambda[w][u] + Lambda[w][v]
+    plt.axis('off')
+    plt.show()
 
 
 @timeit
@@ -74,7 +72,7 @@ if __name__ == '__main__':
         G[u][u]['weight'] = 0
 
     # draw_graph.draw(G)  # how to draw the graph with it's weights
-    t = ADO(G, k)
+    t = ApproximateDistanceOracles(G)
     print('Pre-processing..')
     t.pre_processing()
 
