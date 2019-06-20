@@ -29,6 +29,7 @@ class ADO(object):
             w = self.P[i][u]
         return self.Lambda[i][u] + self.B[v][w]
 
+    @timeit
     def pre_processing(self):
         """
         Gets an undirected positive weighted graph and computes:
