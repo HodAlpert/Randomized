@@ -2,7 +2,7 @@ import networkx as nx
 from matplotlib import pyplot as plt
 
 from algorithm import ApproximateDistanceOracles
-from common import timeit
+from common import timeit, average_difference, avg
 
 
 def draw(G):
@@ -21,37 +21,34 @@ def draw(G):
 
 @timeit
 def run(G, iterations=100):
-    total_avg = 0.0
-    max_avg = 0.0
-    min_avg = float('inf')
-    times = {}
+    total_average = 0.0
+    max_average = 0.0
+    min_average = float('inf')
+    average_query_time = 0.0
+
     for i in range(iterations):
-        for node in G.nodes:
-            max_avg, min_avg, total_avg = run_node(G, max_avg, min_avg, node, total_avg,
-                                                   log_name=f'{i}_{node}', log_time=times)
-    total_avg /= len(G) * iterations
-    print(f'Total average stretch: {total_avg}',
-          f'Total average node stretch: {sum(times.values()) / len(times)}',
-          f'Max stretch value: {max_avg}',
-          f'Min stretch value: {min_avg}', sep='\n')
+        # Iterating each node and its shortest paths distances
+        for source_node, dijkstra_distances in nx.all_pairs_dijkstra_path_length(G):
+            # Querying & timing our algorithm
+            times = {}
+            algo_distances = [timeit(algo.compute_distance)(source_node, target_node,
+                                                            log_name=f'{source_node, target_node}',
+                                                            log_time=times)
+                              for target_node in G]
+            # Comparing result
+            node_stretch = average_difference(dijkstra_distances.values(), algo_distances)
 
+            min_average = min(min_average, node_stretch)
+            max_average = max(max_average, node_stretch)
+            total_average += node_stretch
+            average_query_time += avg(times.values())
 
-@timeit
-def run_node(G, max_average, min_average, node, total_average, **kwargs):
-    path_lengths, paths = nx.single_source_dijkstra(G, node)
-    path_lengths.pop(node)
-    algorithm_distances = {v: t.compute_distance(1, v) for v in set(G) - {node}}
-    # print("Dijkstra length: ", path_lengths)
-    # print("Algorithm length: ", algorithm_distances)
-    node_average = 0.0
-    for i in set(G) - {node}:
-        node_average += float(abs(path_lengths[i] - algorithm_distances[i]))
-    node_average /= len(G) - 1
-    # print("Node %d average stretch: %f" % (node, node_average))
-    min_average = min(min_average, node_average)
-    max_average = max(max_average, node_average)
-    total_average += node_average
-    return max_average, min_average, total_average
+    total_average /= len(G) * iterations
+    average_query_time /= len(G) * iterations
+    print(f'Total average stretch: {total_average}',
+          f'Average query time: {average_query_time}',
+          f'Max stretch value: {max_average}',
+          f'Min stretch value: {min_average}', sep='\n')
 
 
 if __name__ == '__main__':
@@ -72,9 +69,9 @@ if __name__ == '__main__':
         G[u][u]['weight'] = 0
 
     # draw_graph.draw(G)  # how to draw the graph with it's weights
-    t = ApproximateDistanceOracles(G)
+    algo = ApproximateDistanceOracles(G)
     print('Pre-processing..')
-    t.pre_processing()
+    algo.pre_processing()
 
     print('Running algorithm')
-    run(G, iterations=5)
+    run(G, iterations=50)

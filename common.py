@@ -43,6 +43,14 @@ def modified_dijkstra(G, source, i, Lambda):
     return distances
 
 
+def avg(input_list):
+    return sum(input_list) / len(input_list)
+
+
+def average_difference(list1, list2):
+    return sum([abs(i - j) for i, j in zip(list1, list2)]) / len(list1)
+
+
 def timeit(method):
     def timed(*args, **kwargs):
         ts = time.time()

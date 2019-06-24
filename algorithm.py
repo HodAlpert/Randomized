@@ -15,7 +15,7 @@ class ApproximateDistanceOracles(object):
         self.Lambda = None
         self.P = None
 
-    def compute_distance(self, u, v):
+    def compute_distance(self, u, v, **kwargs):
         """
         computes the distances according to the algorithm
         :param u: Integer representing node u
