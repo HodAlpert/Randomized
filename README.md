@@ -31,6 +31,7 @@ Max stretch value: 3.364
 Min stretch value: 1.48
 
 #### Bitcoin OTC Trust
+
 ##### Description:
 This is who-trusts-whom network of people who trade using Bitcoin on a platform called Bitcoin OTC.
 Since Bitcoin users are anonymous, there is a need to maintain a record of users' reputation to prevent transactions with fraudulent and risky users.

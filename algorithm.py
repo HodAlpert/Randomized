@@ -50,7 +50,6 @@ class ApproximateDistanceOracles(object):
         self.P = P
         return Lambda, P, B
 
-    @timeit
     def generate_B(self, A, Lambda):
         C = {}
         for i in range(self.k - 1, -1, -1):
@@ -129,19 +128,3 @@ class ApproximateDistanceOracles(object):
         for j in range(self.k + 1):
             array.append([float('inf') for i in range(self.n)])
         return array
-
-    def parse_graph(self, *argv, **kwargs):
-        """
-        parses the user arguments.
-        :returns: k, and G
-        Assumptions about the input:
-        1) nodes hashes are integers
-        2) weights are stored under 'weight' key in every edge.
-        """
-        pass
-
-    def test(self):
-        """
-        TODO
-        """
-        pass
