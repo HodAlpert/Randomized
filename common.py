@@ -48,7 +48,7 @@ def avg(input_list):
 
 
 def average_difference(list1, list2):
-    return sum([abs(i - j) for i, j in zip(list1, list2)]) / len(list1)
+    return avg([abs(i - j) for i, j in zip(list1, list2)])
 
 
 def timeit(method):

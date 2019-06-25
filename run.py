@@ -62,7 +62,7 @@ def run(G, iterations=100):
 
 if __name__ == '__main__':
     # Loading weighted graph with integer nodes
-    G = nx.read_weighted_edgelist('graphs/movie_ratings.edgelist', nodetype=int)
+    G = nx.read_weighted_edgelist('graphs/bitcoin_otc_user_trust.edgelist', nodetype=int)
     # Extract max connected component if G isn't connected
     if not nx.is_connected(G):
         print('G is not connected, extracting max connected subgraph..')
@@ -83,4 +83,4 @@ if __name__ == '__main__':
     algo.pre_processing()
 
     print('Running algorithm')
-    run(G, iterations=1)
+    run(G, iterations=2)
