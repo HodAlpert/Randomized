@@ -48,7 +48,6 @@ class ApproximateDistanceOracles(object):
         self.B = B
         self.Lambda = Lambda
         self.P = P
-        print(f'lambda: {Lambda}\nP: {P}\nA: {A}\nB: {B}')
         return Lambda, P, B
 
     @timeit

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import networkx as nx
 from matplotlib import pyplot as plt
 
@@ -25,10 +27,14 @@ def run(G, iterations=100):
     max_average = 0.0
     min_average = float('inf')
     average_query_time = 0.0
+    average_dijkstra_time = 0.0
 
     for i in range(iterations):
         # Iterating each node and its shortest paths distances
+        start = datetime.now()
         for source_node, dijkstra_distances in nx.all_pairs_dijkstra_path_length(G):
+            average_dijkstra_time += (datetime.now() - start).total_seconds()
+
             # Querying & timing our algorithm
             times = {}
             algo_distances = [timeit(algo.compute_distance)(source_node, target_node,
@@ -43,17 +49,20 @@ def run(G, iterations=100):
             total_average += node_stretch
             average_query_time += avg(times.values())
 
-    total_average /= len(G) * iterations
-    average_query_time /= len(G) * iterations
+    d = len(G) * iterations
+    total_average /= d
+    average_query_time /= d
+    average_dijkstra_time /= d
     print(f'Total average stretch: {total_average}',
           f'Average query time: {average_query_time}',
+          f'Average dijkstra time: {average_dijkstra_time}',
           f'Max stretch value: {max_average}',
           f'Min stretch value: {min_average}', sep='\n')
 
 
 if __name__ == '__main__':
     # Loading weighted graph with integer nodes
-    G = nx.read_weighted_edgelist('graphs/les_miserables.edgelist', nodetype=int)
+    G = nx.read_weighted_edgelist('graphs/bitcoin_otc_user_trust.edgelist', nodetype=int)
     # Extract max connected component if G isn't connected
     if not nx.is_connected(G):
         print('G is not connected, extracting max connected subgraph..')
@@ -64,14 +73,14 @@ if __name__ == '__main__':
     elif not all(n in G.nodes for n in range(len(G))):
         G = nx.relabel_nodes(G, dict(zip(G, range(len(G)))))
 
-    # Verifying all self loop edges weights are 0
-    for u in nx.nodes_with_selfloops(G):
-        G[u][u]['weight'] = 0
+    # Removing self-loop edges
+    G.remove_edges_from(list(nx.selfloop_edges(G)))
 
+    print(f'Nodes: {len(G)}, Edges: {len(G.edges)}')
     # draw_graph.draw(G)  # how to draw the graph with it's weights
     algo = ApproximateDistanceOracles(G)
     print('Pre-processing..')
     algo.pre_processing()
 
     print('Running algorithm')
-    run(G, iterations=50)
+    run(G, iterations=100)
