@@ -51,14 +51,13 @@ def average_difference(list1, list2):
     return avg([abs(i - j) for i, j in zip(list1, list2)])
 
 
-def timeit(method):
+def timeit(method, log_name=None, output=None):
     def timed(*args, **kwargs):
         ts = time.time()
         result = method(*args, **kwargs)
         te = time.time()
-        if 'log_time' in kwargs:
-            name = kwargs.get('log_name', method.__name__.upper())
-            kwargs['log_time'][name] = (te - ts) * 1000
+        if output is not None:
+            output[log_name if log_name is not None else method.__name__] = (te - ts) * 1000
         else:
             print('%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
         return result

@@ -1,7 +1,7 @@
 import networkx as nx
 import numpy as np
 
-from common import modified_dijkstra, timeit
+from common import modified_dijkstra
 
 SOURCE = "s"
 
@@ -15,7 +15,7 @@ class ApproximateDistanceOracles(object):
         self.Lambda = None
         self.P = None
 
-    def compute_distance(self, u, v, **kwargs):
+    def compute_distance(self, u, v):
         """
         computes the distances according to the algorithm
         :param u: Integer representing node u
@@ -29,7 +29,6 @@ class ApproximateDistanceOracles(object):
             w = self.P[i][u]
         return self.Lambda[i][u] + self.B[v][w]
 
-    @timeit
     def pre_processing(self):
         """
         Gets an undirected positive weighted graph and computes:
