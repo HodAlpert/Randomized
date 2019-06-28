@@ -1,6 +1,4 @@
-# Approximate Distance Oracles Algorithm
-
-Implementation of the Approximate Distance Oracles algorithm.
+An implementation of the Approximate Distance Oracles algorithm.
 
 The algorithm statistics are available in the *results* directory. 
 
