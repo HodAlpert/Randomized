@@ -1,8 +1,0 @@
-Running algorithm on neural_network_synapses.edgelist, k=3
-Nodes: 297, Edges: 2148
-Pre-processing time: 0.45132923126220703
-Total average stretch: 1.9617045879672115
-Average query time: 0.0017383341348189206
-Average dijkstra time: 0.0040587232323232355
-Max stretch value: 4.063973063973064
-Min stretch value: 0.8619528619528619
