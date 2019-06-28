@@ -1,13 +1,15 @@
-# Randomized Algorithms
+# Approximate Distance Oracles Algorithm
 
-Implementation of the Approximate Distance Oracles algorithms. 
+Implementation of the Approximate Distance Oracles algorithm.
+
+The algorithm statistics are available in the *results* directory. 
 
 Paper:
 [Link][1]
 
-### Graphs used & statistics:
+## Graphs used & statistics:
 
-#### Les Misérables
+### *Les Misérables*
 
 ##### Description:
 
@@ -18,15 +20,7 @@ A node represents a character and an edge between two nodes shows that these two
 - Number of nodes: 77
 - Number of edges: 254
 
-##### Statistics:
-- Pre-processing time: 0.032.67 seconds
-- Average Dijkstra time: 0.0291 seconds
-- Average query time: 0.002 seconds
-- Average stretch: 2.499
-- Max stretch value: 3.364
-- Min stretch value: 1.48
-
-#### Bitcoin OTC Trust
+### *Bitcoin OTC Trust*
 
 ##### Description:
 This is who-trusts-whom network of people who trade using Bitcoin on a platform called Bitcoin OTC.
@@ -37,15 +31,7 @@ Members of Bitcoin OTC rate other members in a scale of 0 (total trust) to 20 (t
 - Number of nodes: 5,875
 - Number of edges: 21,489
 
-##### Statistics:
-- Pre-processing time: 104.912 seconds
-- Average query time: 0.0017 seconds
-- Average Dijkstra time: 0.287 seconds
-- Average stretch: 4.959
-- Max stretch value: 15.928
-- Min stretch value: 4.865
-
-#### Brain Neural Network Sample
+### *Brain Neural Network Sample*
 
 ##### Description:
 The network contains 306 nodes that represent neurons.
@@ -55,13 +41,5 @@ The weight is the number of synapses and gap junctions.
 ##### Metadata:
 - Number of nodes: 297
 - Number of edges: 2,148
-
-##### Statistics:
-- Pre-processing time: 0.28 seconds
-- Average query time: 0.0018 seconds
-- Average Dijkstra time: 0.767
-- Average stretch: 2.027
-- Max stretch value: 3.909
-- Min stretch value: 0.829
 
 [1]: http://www.cs.jhu.edu/baruch/teaching/600.427/Papers/oracle-STOC-try.pdf
