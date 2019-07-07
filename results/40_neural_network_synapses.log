@@ -1,0 +1,9 @@
+Running algorithm on neural_network_synapses.edgelist, k=40
+Nodes: 297, Edges: 2148
+Pre-processing time: 0.5156195163726807
+Running algorithm
+Total absolute distance: 2.188903626614062
+Average query time: 0.018216659541919585
+Average dijkstra time: 0.009593292929292915
+Max stretch value: 3.797979797979798
+Min stretch value: 1.265993265993266

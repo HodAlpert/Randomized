@@ -1,0 +1,9 @@
+Running algorithm on a_les_miserables.edgelist, k=5
+Nodes: 77, Edges: 254
+Pre-processing time: 0.034906625747680664
+Running algorithm
+Total absolute distance: 3.7421150278293127
+Average query time: 0.00208591526164677
+Average dijkstra time: 0.0006320675324675316
+Max stretch value: 4.766233766233766
+Min stretch value: 2.2857142857142856

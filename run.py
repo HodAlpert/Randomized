@@ -29,7 +29,7 @@ def run(G, k, iterations=5):
     min_average = float('inf')
     average_query_time = 0.0
     average_dijkstra_time = 0.0
-    with open(f'results/{k}_{G.name}', 'w') as output:
+    with open(f'results/{k}_{G.name[:-9]}.log', 'w') as output:
         print(f'Running algorithm on {G.name}, k={k}', file=output)
         print(f'Nodes: {len(G)}, Edges: {len(G.edges)}', file=output)
         # draw_graph.draw(G)  # how to draw the graph with it's weights
@@ -50,7 +50,7 @@ def run(G, k, iterations=5):
                 algo_distances = [timeit(algo.compute_distance, log_name=f'{source_node, target_node}', output=times)
                                   (source_node, target_node) for target_node in G]
                 # Comparing result
-                node_stretch = average_difference(dijkstra_distances.values(), algo_distances)
+                node_stretch = average_difference(algo_distances, dijkstra_distances.values())
 
                 min_average = min(min_average, node_stretch)
                 max_average = max(max_average, node_stretch)
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         # Removing self-loop edges
         G.remove_edges_from(list(nx.selfloop_edges(G)))
 
-        ks = [3, 10, 50]
+        ks = [5, 10, 20, 30, 40]
         for k in ks:
             pool.apply_async(run, args=(G, k))
     pool.close()

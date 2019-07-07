@@ -8,17 +8,14 @@ def modified_dijkstra(G, source, i, Lambda):
     # 2. Set the distance to zero for our initial node
     # and to infinity for other nodes.
     distances = {vertex: float('inf') for vertex in G.nodes}
-    previous_vertices = {
-        vertex: None for vertex in G.nodes
-    }
+    previous_vertices = {vertex: None for vertex in G.nodes}
     distances[source] = 0
     vertices = dict(G.nodes).copy()
 
     while vertices:
         # 3. Select the unvisited node with the smallest distance,
         # it's current node now.
-        current_vertex = min(
-            vertices, key=lambda vertex: distances[vertex])
+        current_vertex = min(vertices, key=lambda vertex: distances[vertex])
 
         # 6. Stop, if the smallest distance
         # among the unvisited nodes is infinity.
@@ -48,7 +45,7 @@ def avg(input_list):
 
 
 def average_difference(list1, list2):
-    return avg([abs(i - j) for i, j in zip(list1, list2)])
+    return avg([i / j for i, j in zip(list1, list2) if j != 0])
 
 
 def timeit(method, log_name=None, output=None):

@@ -1,0 +1,9 @@
+Running algorithm on bitcoin_otc_user_trust.edgelist, k=40
+Nodes: 5875, Edges: 21489
+Pre-processing time: 134.06732726097107
+Running algorithm
+Total absolute distance: 8.76203484653647
+Average query time: 0.007871175880829718
+Average dijkstra time: 0.050758085412766676
+Max stretch value: 9.549276595744681
+Min stretch value: 4.900765957446809
